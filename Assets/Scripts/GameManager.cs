@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Dynamic Objects")]
     public PostProcessing negativeEffect;
-    public GameObject sun;
+    //public GameObject sun;
     public List<GameObject> negativeObjects;
     public List<GameObject> positiveObjects;
 
@@ -39,14 +39,14 @@ public class GameManager : MonoBehaviour
         if (negativeEffect.enabled == false)
         {
             negativeEffect.enabled = true;
-            sun.SetActive(false);
+            //sun.SetActive(false);
             SwitchObjects(negativeObjects, true);
             SwitchObjects(positiveObjects, false);
         }
         else
         {
             negativeEffect.enabled = false;
-            sun.SetActive(true);
+            //sun.SetActive(true);
             SwitchObjects(negativeObjects, false);
             SwitchObjects(positiveObjects, true);
         }

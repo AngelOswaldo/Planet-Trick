@@ -15,15 +15,17 @@ public class Interactable : MonoBehaviour, IPointerClickHandler
 
     [Header("OBJECT TYPE")]
     public objectType type;
-    public GameObject target;
+    [Header("Tagets")]
+    public List<GameObject> water;
+    public List<GameObject> dirt;
+    [Header("Next Puzzle")]
+    public Interactable puzzle;
     [Header("TIMER TYPE")]
+    public GameObject target;
     public float Timer;
     private bool runningTime = false;
     [Header("GEAR TYPE")]
-    public float angle;
-    public Vector3 angleRotation;
-    public int clicks;
-    private int actualClicks = 0;
+    public Vector3 newRotation;
     [Header("MOVE TYPE")]
     public Transform newPosition;
     private Vector3 startPosition;
@@ -46,14 +48,11 @@ public class Interactable : MonoBehaviour, IPointerClickHandler
         {
             //ACTIVAMOS O DESACTIVAMOS EL TARGET
             case objectType.LEVER:
-                if (target.activeSelf)
-                {
-                    target.SetActive(false);
-                }
-                else
-                {
-                    target.SetActive(true);
-                }
+                ActiveList(water, true);
+                if (puzzle != null)
+                    puzzle.enabled = true;
+                ActiveList(dirt, false);
+                gameObject.SetActive(false);
                 break;
 
             //DESACTIVAMOS CIERTA CANTIDAD DE TIEMPO EL OBJETO TARGET Y LUEGO SE VUELVE ACTIVAR
@@ -68,29 +67,26 @@ public class Interactable : MonoBehaviour, IPointerClickHandler
 
             //ROTAMOS EL OBJETO X CANTIDAD DE VECES PARA DESACTIVAR EL OBJETO TARGET
             case objectType.GEAR:
-                if (actualClicks<clicks)
-                {
-                    transform.Rotate(angleRotation, angle);
-                    actualClicks += 1;
-                }
-                else if (actualClicks>=clicks)
-                {
-                    target.SetActive(false);
-                }
+                transform.rotation = Quaternion.Euler(newRotation);
+                ActiveList(water, true);
+                if(puzzle!=null)
+                    puzzle.enabled = true;
+                ActiveList(dirt, false);
                 break;
 
 
             //INTERCAMBIAMOS LA POSICION DEL OBJETO DEL PUNTO INICIAL AL PUNTO B Y VICEVERSA
             case objectType.MOVE:
-                if (transform.position != newPosition.position)
+                if(newPosition!=null)
                 {
                     transform.position = newPosition.position;
+                    ActiveList(water, true);
+                    ActiveList(dirt, false);
+                    if (puzzle != null)
+                        puzzle.enabled = true;
+                    this.enabled = false;
+                }
 
-                }
-                else
-                {
-                    transform.position = startPosition;
-                }
                 break;
         }
 
@@ -102,6 +98,12 @@ public class Interactable : MonoBehaviour, IPointerClickHandler
         runningTime = false;
     }
 
-
+    private void ActiveList(List<GameObject> objects, bool state)
+    {
+        for (int i = 0; i < objects.Count; i++)
+        {
+            objects[i].SetActive(state);
+        }
+    }
 
 }
