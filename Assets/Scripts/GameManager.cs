@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Win Parameters")]
     public GameObject victoryPanel;
+    public GameObject controls;
     public bool coinPicked = false;
 
     [Header("Dynamic Objects")]
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
     {
         coinPicked = true;
         victoryPanel.SetActive(true);
+        controls.SetActive(false);
     }
 
     public void SwitchLight()
